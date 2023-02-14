@@ -15,7 +15,7 @@
         <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark" data-bs-theme="dark">
             <div class="container-fluid">
               <a class="navbar-brand">Mapas</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <button id="nav_toggle_button_media" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -158,5 +158,10 @@
         
         id_current_topic = id_topic_select
         id_current_item = partial_url
+        
+        const mediaQuery = window.matchMedia('(max-width: 992px)')
+        if (mediaQuery.matches) {
+            document.getElementById("nav_toggle_button_media").click()
+        }
     }
 </script>
