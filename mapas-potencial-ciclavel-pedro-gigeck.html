@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapas | Um índice baseado em evidências para migração de modal para bicicleta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(255, 45, 45)" class="bi bi-map-fill" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.502.502 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5V.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.498.498 0 0 0-.196 0L5 14.09zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1-.5-.1z"/> </svg>'>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <div style="width: 100%;height: 56px; background-color: grey;">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark" data-bs-theme="dark">
+            <div class="container-fluid">
+              <a class="navbar-brand">Mapas</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
+                    <li class="nav-item dropdown">
+                        <a id="botao_help" style="margin-left: 4px; text-decoration: none;" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" onclick="help_content(nome='Estrutura Cicloviária',descricao='Mapas choropleth que mostram a distribuição da estrutura cicloviária (ciclovias, ciclofaixas e ciclorrotas) pelas zonas de São Paulo, segundo dados fornecidos pela CET.')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                            </svg>
+                        </a>
+                        <a id="estrutura_cicloviaria" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: inline-flex; align-items: center;">
+                            Estrutura Cicloviária 
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><button id="rede_cicloviaria_por_zona" class="dropdown-item" onclick="display_map('rede_cicloviaria_por_zona','estrutura_cicloviaria')">km de estrutura por zona</button></li>
+                            <li><button id="rede_cicloviaria_por_km_quadrado" class="dropdown-item" onclick="display_map('rede_cicloviaria_por_km_quadrado','estrutura_cicloviaria')">km de estrutura por km²</button></li>
+                            <li><button id="rede_cicloviaria_por_ruas" class="dropdown-item" onclick="display_map('rede_cicloviaria_por_ruas','estrutura_cicloviaria')">km de estrutura por km de vias (porcentagem das vias com estrutura)</button></li>
+                            <li><button id="rede_cicloviaria_por_ruas_lim100" class="dropdown-item" onclick="display_map('rede_cicloviaria_por_ruas_lim100','estrutura_cicloviaria')">km de estrutura por km de vias (limitando em 100%)</button></li>
+                            <li><button id="rede_cicloviaria_por_ruas_outlier" class="dropdown-item" onclick="display_map('rede_cicloviaria_por_ruas_outlier','estrutura_cicloviaria')">km de estrutura por km de vias (retirando outlier USP Leste II)</button></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a id="botao_help" style="margin-left: 4px; text-decoration: none;" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" onclick='help_content(nome="Inclinação",descricao="Mapas que mostram a inclinação (ou declividade) das rotas feitas de bicicleta em São Paulo (OD 2017).<br><br>A inclinação é a proporção entre o deslocamento da altitude pelo comprimento do segmento, por exemplo, um trecho de 100 metros com elevação de 10 metros tem inclinação de 10%.<br><br>Cada mapa nesse tópico divide as rotas em trechos de tamanhos distintos. Quanto menor o valor, mais detalhado (e pesado) é o mapa. O valor segmentos retos representa o maior detalhamento, dividindo a rota em segmentos de retas, geralmente representando cada rua, independente do comprimento em metros do trecho.")'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                            </svg>
+                        </a>
+                        <a id="inclinacao" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: inline-flex; align-items: center;">
+                            Inclinação
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><button id="slopes_5000" class="dropdown-item" onclick="display_map('slopes_5000','inclinacao')">5000 metros</button></li>
+                            <li><button id="slopes_1000" class="dropdown-item" onclick="display_map('slopes_1000','inclinacao')">1000 metros</button></li>
+                            <li><button id="slopes_500" class="dropdown-item" onclick="display_map('slopes_500','inclinacao')">500 metros</button></li>
+                            <li><button id="slopes_200" class="dropdown-item" onclick="display_map('slopes_200','inclinacao')">200 metros</button></li>
+                            <li><button id="slopes_100" class="dropdown-item" onclick="display_map('slopes_100','inclinacao')">100 metros</button></li>
+                            <li><button id="slopes_line" class="dropdown-item" onclick="display_map('slopes_line','inclinacao')">segmentos retos</button></li>
+                            <li><button id="declividade_rotas" class="dropdown-item" onclick="display_map('declividade_rotas','inclinacao')">comparação com topografia</button></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a id="botao_help" style="margin-left: 4px; text-decoration: none;" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" onclick='help_content(nome="Potencial Ciclável",descricao="Mapas que mostram a distribuição geográfica das viágens cicláveis em São Paulo e na região metropolitana. Correspondem a exemplos de análises feitas com o modelo nos cadernos Jupyter.")'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                            </svg>
+                        </a>
+                        <a id="potencial_ciclavel" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: inline-flex; align-items: center;">
+                            Potencial Ciclável
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><button id="potential_SP_08" class="dropdown-item" onclick="display_map(this.id,'potencial_ciclavel')">São Paulo - número absoluto de viagens</button></li>
+                            <li><button id="potential_SP_08_density" class="dropdown-item" onclick="display_map(this.id,'potencial_ciclavel')">São Paulo - % de viagens</button></li>
+                            <li><button id="potential_RMSP_08" class="dropdown-item" onclick="display_map(this.id,'potencial_ciclavel')">RMSP - número absoluto de viagens</button></li>
+                            <li><button id="potential_RMSP_08_density" class="dropdown-item" onclick="display_map(this.id,'potencial_ciclavel')">RMSP - % de viagens</button></li>
+                            <li><button id="potential_train" class="dropdown-item" onclick="display_map(this.id,'potencial_ciclavel')">Viagens de trem (com rotas)</button></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a id="botao_help" style="margin-left: 4px; text-decoration: none;" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" onclick='help_content(nome="Vias",descricao="Mapas com análises referentes a agrupamentos por vias (ruas, avenidas) da cidade, e priorização do plano cicloviário.")'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="grey" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                            </svg>
+                        </a>
+                        <a id="vias" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: inline-flex; align-items: center;">
+                            Vias
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><button id="vias/bicicletas_azul" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens de bicicleta</button></li>
+                            <li><button id="vias/geral" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (geral)</button></li>
+                            <li><button id="vias/car" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (carro)</button></li>
+                            <li><button id="vias/pedestrian" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (pedestre)</button></li>
+                            <li><button id="vias/motorcycle" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (motocicletas)</button></li>
+                            <li><button id="vias/bus_sp" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (ônibus)</button></li>
+                            <li><button id="vias/train" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (trem)</button></li>
+                            <li><button id="vias/subway" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (metrô)</button></li>
+                            <li><button id="vias/geral_sem_infra" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (longe de ciclovias)</button></li>
+                            <li><button id="vias/carro_sem_infra" class="dropdown-item" onclick="display_map(this.id,'vias')">Viagens potenciais (carro - longe de ciclovias)</button></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button id="vias/plano_cicloviario" class="dropdown-item" onclick="display_map(this.id,'vias')">Priorização do plano cicloviário - Geral</button></li>
+                            <li><button id="vias/plano_cicloviario_carro_moto " class="dropdown-item" onclick="display_map(this.id,'vias')">Priorização do plano cicloviário - Carros e motos</button></li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="nav-link" style="color:rgb(191, 191, 191)" aria-current="page" href="https://www.linux.ime.usp.br/~pedrogigeck/mac0499/index.html" target="_blank">Sobre</a>
+              </div>
+            </div>
+          </nav>
+    </div>
+    <div style="width: 100%; height: calc(99vh - 56px);">
+        <iframe id="display_map" src="https://www.linux.ime.usp.br/~pedrogigeck/mac0499/maps/rede_cicloviaria_por_zona.html" width="100%" height="100%" style="border:none;"></iframe>
+    </div>
+    <div class="offcanvas" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="width: 100%; max-height: 100%;">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" style="margin-bottom:20px" id="help_content">
+            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+        </div>
+      </div>
+</body>
+</html>
+<style>
+    body{
+        margin:0;
+        padding:0
+    }
+    #botao_help:hover > svg{
+        fill: white!important;
+    }
+</style>
+<script>
+    var id_current_topic = "estrutura_cicloviaria"
+    var id_current_item = "rede_cicloviaria_por_zona"
+    document.getElementById(id_current_topic).style.fontWeight=500
+    document.getElementById(id_current_item).style.fontWeight=500
+    document.getElementById(id_current_topic).style.color='white';
+    document.getElementById(id_current_item).style.color='white';
+
+    function help_content(nome, desc){
+        document.getElementById("offcanvasExampleLabel").innerHTML=nome
+        document.getElementById("help_content").innerHTML=desc
+    }
+    function display_map(partial_url, id_topic_select){
+        document.getElementById("display_map").src="https://www.linux.ime.usp.br/~pedrogigeck/mac0499/maps/"+partial_url+".html"
+
+        document.getElementById(id_current_topic).style.fontWeight=400
+        document.getElementById(id_current_topic).style.color='var(--bs-nav-link-color)';
+        document.getElementById(id_current_item).style.fontWeight=400
+        document.getElementById(id_current_item).style.color='var(--bs-nav-link-color)';
+        
+        document.getElementById(partial_url).style.fontWeight=500
+        document.getElementById(partial_url).style.color='white'
+        document.getElementById(id_topic_select).style.fontWeight=500
+        document.getElementById(id_topic_select).style.color='white'
+        
+        id_current_topic = id_topic_select
+        id_current_item = partial_url
+    }
+</script>
